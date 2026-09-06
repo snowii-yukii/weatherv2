@@ -20,13 +20,15 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
             <input type="text" 
             value={city} 
             onChange={(e) => setCity(e.target.value)} 
-            placeholder="Search..." />
+            placeholder="Enter a city..."
+            className="outline rounded-xl py-3 px-6"
+            />
         
-            <button type="submit">Search</button>
+            <button type="submit" className="hidden">Search</button>
         </form>
     )
 }

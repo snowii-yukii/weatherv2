@@ -32,9 +32,9 @@ export default function RootLayout({
         <div className="fixed inset-0 z-0 pointer-events-none">
           <Particles
             particleColors={["#52525b"]}
-            particleCount={1000}
+            particleCount={300}
             particleSpread={20}
-            speed={2}
+            speed={1}
             particleBaseSize={100}
             moveParticlesOnHover
             alphaParticles

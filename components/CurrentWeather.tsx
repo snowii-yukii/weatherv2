@@ -11,7 +11,7 @@ export default function CurrentWeather({
   const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
 
   return (
-    <section className="flex flex-col items-center gap-4 md:flex-row">
+    <section className="flex flex-col items-center gap-4 lg:flex-row">
       <div className="flex flex-col items-center justify-center bg-white/30 outline shadow-xl backdrop-blur-lg backdrop-opacity-30 p-10 gap-2 w-full h-full rounded sm:w-120 sm:h-120">
         <h2 className="text-4xl">
           {weather.name}, {weather.sys.country}

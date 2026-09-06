@@ -30,7 +30,8 @@ export default function Home() {
   return (
     
     <section className="flex flex-col items-center gap-20">
-      <SearchBar onSearch={handleSearch} />
+      <div><SearchBar onSearch={handleSearch} /></div>
+      
 
       {weather ? (
         <CurrentWeather weather={weather} />
