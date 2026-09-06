@@ -129,6 +129,7 @@
   }
 
   .card {
-    @apply h-48 flex-[1_0_200px] bg-zinc-950 py-3.5 px-4.5 rounded outline
+    @apply h-58 flex-[1_0_280px] py-3.5 px-4.5 rounded outline text-xl shadow-lg bg-black/5
   }
 }
+

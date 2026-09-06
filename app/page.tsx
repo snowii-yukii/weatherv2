@@ -29,10 +29,16 @@ export default function Home() {
 
   return (
     
-    <section>
+    <section className="flex flex-col items-center gap-20">
       <SearchBar onSearch={handleSearch} />
 
-      {weather && <CurrentWeather weather={weather} />}
+      {weather ? (
+        <CurrentWeather weather={weather} />
+      ) : (
+        <div className="text-center text-gray-500 text-lg">
+          <p>Try searching for a city to see the weather forecast.</p>
+        </div>
+      )}
     </section>
       
   );
