@@ -129,7 +129,7 @@
   }
 
   .card {
-    @apply h-58 flex-[1_0_280px] py-3.5 px-4.5 rounded outline text-xl shadow-lg bg-black/5
+    @apply h-58 flex-[1_0_280px] py-3.5 px-4.5 rounded-md bg-black/5 backdrop-blur-2xl border border-slate-300 shadow-md shadow-slate-100/50
   }
 }
 

@@ -42,7 +42,7 @@ export default function RootLayout({
             pixelRatio={1}
           />
         </div>
-        <main className="relative z-10 flex-1 p-3 sm:p-10 lg:p-20">
+        <main className="relative z-10 flex-1 p-3 sm:p-8">
           {children}
         </main>
       </body>
