@@ -4,10 +4,12 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
 
     const city = searchParams.get('city')
+    const lat = searchParams.get('lat')
+    const lon = searchParams.get('lon')
 
-    if(!city) {
+    if (!city && (!lat || !lon)) {
         return NextResponse.json(
-            { error: "City is required" },
+            { error: "City or coordinates (lat, lon) are required" },
             { status: 400 }
         )
     }
@@ -21,15 +23,15 @@ export async function GET(request: Request) {
     )
     }
 
-    const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-      city
-    )}&appid=${API_KEY}&units=metric`
-    )
+    const url = city
+        ? `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
+        : `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
+
+    const response = await fetch(url)
 
     if(!response.ok) {
         return NextResponse.json(
-            { error: 'City not found'},
+            { error: 'Weather data not found'},
             { status: response.status }
         )
     }

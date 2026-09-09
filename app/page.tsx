@@ -1,7 +1,7 @@
 'use client'
 
 import Navbar from "@/components/Navbar";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { WeatherData } from "@/types/weather";
 import CurrentWeather from "@/components/CurrentWeather";
 import Loader from "@/components/Loader";
@@ -29,9 +29,39 @@ export default function Home() {
     } finally {
       setLoading(false)
     }
-
-
   }
+
+  useEffect(() => {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords
+
+          try {
+            setLoading(true)
+            setError('')
+
+            const response = await fetch (
+              `/api/weather?lat=${latitude}&lon=${longitude}`
+            )
+
+            if(!response.ok) {
+              throw new Error('Failed to fetch weather')
+            }
+
+            const data: WeatherData = await response.json()
+
+            setWeather(data)
+          } catch (error) {
+            setError('Could not get weather')
+          } finally {
+            setLoading(false)
+          }
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    }, [])
 
   return (
     <section className="flex flex-col items-center gap-8 w-full">
@@ -68,4 +98,3 @@ export default function Home() {
     </section>
   );
 }
-
