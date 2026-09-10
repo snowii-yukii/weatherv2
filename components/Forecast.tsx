@@ -15,7 +15,7 @@ export default function Forecast({ forecast, hasTheme }: ForecastProps) {
   return (
     <section className="w-full">
       <h2 className={`mb-3 text-xs font-semibold uppercase tracking-widest ${subText}`}>
-        24-hour forecast
+        hourly forecast
       </h2>
 
       <div className="grid grid-cols-4 gap-2 sm:grid-cols-8">
