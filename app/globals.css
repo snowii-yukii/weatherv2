@@ -119,17 +119,20 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 transition-all duration-200;
+    @apply border-border outline-ring/50;
+    transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+    transition-duration: 200ms;
+    transition-timing-function: ease;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
   }
   html {
     @apply font-sans;
   }
 
-  .card {
-    @apply h-58 flex-[1_0_280px] py-3.5 px-4.5 rounded-md bg-black/5 backdrop-blur-2xl border border-slate-300 shadow-md shadow-slate-100/50
+  .stat-card {
+    @apply min-h-[140px] flex-[1_0_200px] py-4 px-5 rounded-2xl;
   }
 }
 
