@@ -27,16 +27,40 @@ export async function GET(request: Request) {
         ? `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric`
         : `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
 
-    const response = await fetch(url)
+    const response = await fetch(url);
 
-    if(!response.ok) {
-        return NextResponse.json(
-            { error: 'Weather data not found'},
-            { status: response.status }
-        )
+    if (!response.ok) {
+    return NextResponse.json(
+        { error: "City not found" },
+        { status: response.status }
+    );
     }
 
-    const data = await response.json()
+    const weatherData = await response.json();
 
-    return NextResponse.json(data)
+    let forecastUrl = "";
+
+    if (city) {
+    forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${encodeURIComponent(
+        city
+    )}&appid=${API_KEY}&units=metric`;
+    } else if (lat && lon) {
+    forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
+    }
+
+    const forecastResponse = await fetch(forecastUrl);
+
+    if (!forecastResponse.ok) {
+    return NextResponse.json(
+        { error: "Failed to fetch forecast" },
+        { status: forecastResponse.status }
+    );
+    }
+
+    const forecastData = await forecastResponse.json();
+
+    return NextResponse.json({
+    weather: weatherData,
+    forecast: forecastData,
+    });
 }

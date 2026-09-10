@@ -2,12 +2,14 @@
 
 import Navbar from "@/components/Navbar";
 import { useState, useEffect } from "react";
-import { WeatherData } from "@/types/weather";
+import { WeatherData, ForecastData, WeatherResponse } from "@/types/weather";
 import CurrentWeather from "@/components/CurrentWeather";
 import Loader from "@/components/Loader";
+import Forecast from "@/components/Forecast";
 
 export default function Home() {
   const [weather, setWeather] = useState<WeatherData | null>(null)
+  const [forecast, setForecast] = useState<ForecastData | null>(null)
   const [isLoading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -21,8 +23,9 @@ export default function Home() {
       if(!response.ok) {
         throw new Error("City not found")
       }
-      const data: WeatherData = await response.json();
-      setWeather(data);
+      const data: WeatherResponse = await response.json();
+      setWeather(data.weather);
+      setForecast(data.forecast);
     } catch (error) {
       setError("Could not find the city")
       setWeather(null)
@@ -32,8 +35,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
+      navigator.geolocation.getCurrentPosition(async (position) => {
           const { latitude, longitude } = position.coords
 
           try {
@@ -48,9 +50,10 @@ export default function Home() {
               throw new Error('Failed to fetch weather')
             }
 
-            const data: WeatherData = await response.json()
+            const data: WeatherResponse = await response.json()
 
-            setWeather(data)
+            setWeather(data.weather)
+            setForecast(data.forecast)
           } catch (error) {
             setError('Could not get weather')
           } finally {
@@ -83,8 +86,11 @@ export default function Home() {
         
       )}
 
-      {weather && !isLoading && !error ? (
-        <CurrentWeather weather={weather} />
+      {weather && forecast && !isLoading && !error ? (
+        <>
+          <CurrentWeather weather={weather} forecast={forecast} />
+        </>
+        
       ) : (
         !isLoading &&
         !error &&

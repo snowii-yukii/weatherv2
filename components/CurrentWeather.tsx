@@ -1,4 +1,5 @@
-import { WeatherData } from "@/types/weather";
+import { WeatherData,ForecastData } from "@/types/weather";
+import Forecast from "@/components/Forecast";
 import "@/app/globals.css"
 import {
   Thermometer,
@@ -10,11 +11,10 @@ import {
 
 interface CurrentWeatherProps {
   weather: WeatherData;
+  forecast: ForecastData;
 }
 
-export default function CurrentWeather({
-  weather,
-}: CurrentWeatherProps) {
+export default function CurrentWeather({ weather, forecast }: CurrentWeatherProps) {
   const iconUrl = `https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`;
 
   const getHumidityFact = (humidity: number) => {
@@ -43,6 +43,8 @@ export default function CurrentWeather({
           <p className="capitalize">{weather.weather[0].description}</p>
         </div>
       </div>
+
+      <Forecast forecast={forecast} />
 
       <div className="flex flex-wrap justify-center gap-4 w-full">
         <div className="card flex flex-col justify-between min-h-[140px]">
