@@ -22,10 +22,10 @@ export default function Navbar({ onSearch }: NavbarProps) {
     }
 
     return (
-        <header className="sticky top-3 sm:top-5 z-40 w-full max-w-5xl mx-auto px-2 sm:px-0">
+        <header className="sm:top-5 z-40 w-full max-w-5xl mx-auto px-2 sm:px-0">
             <nav 
                 aria-label="Main Navigation"
-                className="bg-white rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.06),0_1px_3px_rgb(0,0,0,0.04)] px-4 py-3 sm:px-6 sm:py-3.5 transition-all duration-200"
+                className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 shadow-[0_8px_30px_rgb(0,0,0,0.06),0_1px_3px_rgb(0,0,0,0.04)] px-4 py-3 sm:px-6 sm:py-3.5 transition-all duration-200"
             >
                 {/* Main Navbar Header Row */}
                 <div className="flex items-center justify-between gap-4">

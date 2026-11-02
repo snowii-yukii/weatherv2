@@ -43,10 +43,6 @@ export default function SearchBar({ onSearch, autoFocus = false, className = "",
             className={`relative flex items-center w-full ${className}`}
         >
             <div className="relative flex items-center w-full">
-                <Search 
-                    className="absolute left-3.5 w-4 h-4 text-slate-400 pointer-events-none transition-colors group-focus-within:text-sky-500" 
-                    aria-hidden="true" 
-                />
                 
                 <input 
                     ref={inputRef}
@@ -54,7 +50,7 @@ export default function SearchBar({ onSearch, autoFocus = false, className = "",
                     value={city} 
                     onChange={(e) => setCity(e.target.value)} 
                     placeholder="Search city or location..."
-                    className="w-full pl-10 pr-20 py-2.5 bg-slate-50/90 hover:bg-slate-100/70 focus:bg-white text-slate-800 placeholder:text-slate-400 text-sm font-medium rounded-xl border border-slate-200/90 shadow-inner shadow-slate-900/5 focus:outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-500/20 transition-all duration-200"
+                    className="w-full pl-5 pr-20 py-2.5 bg-white/80 backdrop-blur-xl text-slate-800 placeholder:text-slate-400 text-sm font-medium rounded-xl border border-white/10 shadow-inner shadow-slate-900/5 focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-500/20 transition-all duration-200"
                 />
 
                 <div className="absolute right-2 flex items-center gap-1">
