@@ -2,9 +2,10 @@
 
 import Navbar from "@/components/Navbar";
 import Particles from "@/components/Particles";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { WeatherData, ForecastData, WeatherResponse } from "@/types/weather";
 import CurrentWeather from "@/components/CurrentWeather";
+import LandingPage from "@/components/LandingPage";
 import Loader from "@/components/Loader";
 import { getWeatherTheme, WeatherTheme } from "@/lib/weatherTheme";
 
@@ -16,17 +17,28 @@ export default function Home() {
 
   const theme: WeatherTheme | null = useMemo(() => {
     if (!weather) return null;
-    const now = Date.now() / 1000;
-    const isDaytime = now > weather.sys.sunrise && now < weather.sys.sunset;
+    const isDaytime = weather.weather[0]?.icon
+      ? weather.weather[0].icon.endsWith('d')
+      : (() => {
+          const now = Date.now() / 1000;
+          return now > weather.sys.sunrise && now < weather.sys.sunset;
+        })();
     return getWeatherTheme(weather.weather[0].id, isDaytime);
   }, [weather]);
+
+  const handleReset = useCallback(() => {
+    setWeather(null);
+    setForecast(null);
+    setError("");
+  }, []);
 
   const handleSearch = async (city: string) => {
     setLoading(true)
     setError('')
     try {
       const response = await fetch(
-        `/api/weather?city=${encodeURIComponent(city)}`
+        `/api/weather?city=${encodeURIComponent(city.trim())}`,
+        { cache: 'no-store' }
       )
       if (!response.ok) {
         throw new Error("City not found")
@@ -42,26 +54,64 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition(async (position) => {
-      const { latitude, longitude } = position.coords
-      try {
-        setLoading(true)
-        setError('')
-        const response = await fetch(
-          `/api/weather?lat=${latitude}&lon=${longitude}`
-        )
-        if (!response.ok) throw new Error('Failed to fetch weather')
-        const data: WeatherResponse = await response.json()
-        setWeather(data.weather)
-        setForecast(data.forecast)
-      } catch {
-        setError('Could not get weather')
-      } finally {
-        setLoading(false)
+  const handleDetectLocation = useCallback(() => {
+    if (typeof window === "undefined" || !navigator.geolocation) {
+      setError("Geolocation is not supported by your browser");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const response = await fetch(
+            `/api/weather?lat=${latitude}&lon=${longitude}`,
+            { cache: 'no-store' }
+          );
+          if (!response.ok) throw new Error("Failed to fetch weather");
+          const data: WeatherResponse = await response.json();
+          setWeather(data.weather);
+          setForecast(data.forecast);
+        } catch {
+          setError("Could not get weather for your location");
+        } finally {
+          setLoading(false);
+        }
+      },
+      (err) => {
+        console.log(err);
+        setLoading(false);
+        setError("Location access was denied. Please search for a city instead.");
       }
-    },
-      (err) => { console.log(err) }
+    );
+  }, []);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords
+        try {
+          setLoading(true)
+          setError('')
+          const response = await fetch(
+            `/api/weather?lat=${latitude}&lon=${longitude}`,
+            { cache: 'no-store' }
+          )
+          if (!response.ok) throw new Error('Failed to fetch weather')
+          const data: WeatherResponse = await response.json()
+          setWeather(data.weather)
+          setForecast(data.forecast)
+        } catch {
+          setError('Could not get weather')
+        } finally {
+          setLoading(false)
+        }
+      },
+      (err) => {
+        // Geolocation denied or unavailable on initial mount; keep on landing page
+        console.log("Initial geolocation prompt dismissed or denied:", err)
+      }
     )
   }, [])
 
@@ -101,10 +151,17 @@ export default function Home() {
         )}
 
         {error && !isLoading && (
-          <div className="min-h-[60vh] flex flex-1 justify-center items-center">
-            <p className={`mt-6 text-center text-sm font-medium px-4 py-2 rounded-xl backdrop-blur-sm ${theme ? 'text-white/80 bg-white/10' : 'text-red-500 bg-red-50'}`}>
+          <div className="min-h-[60vh] flex flex-1 justify-center items-center flex-col gap-4">
+            <p className={`text-center text-sm font-medium px-5 py-3 rounded-2xl backdrop-blur-md shadow-sm ${theme ? 'text-white/90 bg-white/10 border border-white/20' : 'text-rose-600 bg-rose-50 border border-rose-200/80'}`}>
               {error}
             </p>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="text-xs font-semibold px-4 py-2 rounded-xl bg-slate-900 text-white hover:bg-slate-800 transition-all cursor-pointer shadow-sm active:scale-95"
+            >
+              Back to Home
+            </button>
           </div>
         )}
 
@@ -113,12 +170,11 @@ export default function Home() {
         )}
 
         {!weather && !isLoading && !error && (
-          <div className="min-h-[60vh] flex flex-1 justify-center items-center">
-            <p className="text-center text-slate-400 text-sm">
-              Turn on your <span className="font-semibold text-slate-600">location</span> or{" "}
-              <span className="font-semibold text-slate-600">search</span> for a city.
-            </p>
-          </div>
+          <LandingPage
+            onSearch={handleSearch}
+            onDetectLocation={handleDetectLocation}
+            isDetectingLocation={isLoading}
+          />
         )}
       </section>
 

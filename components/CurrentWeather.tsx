@@ -1,6 +1,7 @@
+import { useMemo } from "react";
 import { WeatherData, ForecastData } from "@/types/weather";
 import Forecast from "@/components/Forecast";
-import "@/app/globals.css"
+import "@/app/globals.css";
 import {
   Thermometer,
   Droplets,
@@ -25,6 +26,31 @@ export default function CurrentWeather({ weather, forecast, hasTheme }: CurrentW
     ? 'bg-white/10 border-white/15 shadow-black/10'
     : 'bg-black/5 border-slate-200 shadow-slate-100/50';
 
+  const localTimeString = useMemo(() => {
+    if (typeof weather.timezone !== 'number') return null;
+    const cityNow = new Date(Date.now() + weather.timezone * 1000);
+    const day = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      timeZone: 'UTC',
+    }).format(cityNow);
+    const time = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'UTC',
+    }).format(cityNow);
+    return `${day}, ${time}`;
+  }, [weather.timezone]);
+
+  // Provide clear condition wording so slight cloudiness isn't mistaken for totally overcast
+  const conditionLabel = useMemo(() => {
+    const id = weather.weather[0].id;
+    const desc = weather.weather[0].description;
+    const isDay = weather.weather[0].icon?.endsWith('d');
+    if (id === 801) return isDay ? 'Few Clouds · Mostly Sunny' : 'Few Clouds · Mostly Clear';
+    if (id === 802) return 'Scattered Clouds · Partly Cloudy';
+    return desc;
+  }, [weather.weather]);
+
   const getHumidityFact = (h: number) => {
     if (h > 70) return "High humidity can make it feel warmer than it is.";
     if (h < 30) return "Low humidity — the air feels dry.";
@@ -46,6 +72,12 @@ export default function CurrentWeather({ weather, forecast, hasTheme }: CurrentW
           {weather.name}, {weather.sys.country}
         </h2>
 
+        {localTimeString && (
+          <p className={`text-xs font-medium tracking-wide ${subText}`}>
+            Local time: {localTimeString}
+          </p>
+        )}
+
         <img
           src={iconUrl}
           alt={weather.weather[0].description}
@@ -56,7 +88,7 @@ export default function CurrentWeather({ weather, forecast, hasTheme }: CurrentW
           {Math.round(weather.main.temp)}°
         </p>
         <p className={`text-base capitalize tracking-wide ${subText}`}>
-          {weather.weather[0].description}
+          {conditionLabel}
         </p>
       </div>
 

@@ -6,9 +6,10 @@ import SearchBar from "@/components/SearchBar"
 
 interface NavbarProps {
     onSearch: (city: string) => void
+    onReset?: () => void
 }
 
-export default function Navbar({ onSearch }: NavbarProps) {
+export default function Navbar({ onSearch, onReset }: NavbarProps) {
     const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false)
 
     const toggleMobileSearch = () => {
@@ -30,14 +31,19 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 {/* Main Navbar Header Row */}
                 <div className="flex items-center justify-between gap-4">
                     {/* Brand / Logo */}
-                    <div className="flex items-center gap-2.5 shrink-0 select-none">
-                        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white shadow-sm shadow-sky-500/20">
+                    <button
+                        type="button"
+                        onClick={onReset}
+                        className="flex items-center gap-2.5 shrink-0 select-none cursor-pointer group text-left"
+                        aria-label="WeatherPulse Home"
+                    >
+                        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white shadow-sm shadow-sky-500/20 group-hover:scale-105 transition-transform">
                             <CloudSun className="w-5 h-5" />
                         </div>
-                        <span className="text-lg font-bold tracking-tight text-slate-900">
+                        <span className="text-lg font-bold tracking-tight text-slate-900 group-hover:opacity-90 transition-opacity">
                             Weather<span className="text-sky-500">Pulse</span>
                         </span>
-                    </div>
+                    </button>
 
                     {/* Desktop Search Bar (visible on sm: and up) */}
                     <div className="hidden sm:flex flex-1 max-w-md ml-auto">

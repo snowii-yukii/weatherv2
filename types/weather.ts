@@ -1,5 +1,6 @@
 export interface WeatherData {
     name: string;
+    timezone: number;
 
     main: {
         temp: number;
@@ -26,6 +27,7 @@ export interface WeatherData {
         sunrise: number;
         sunset: number;
     };
+    dt?: number;
 }
 
 export interface ForecastData {
@@ -57,6 +59,7 @@ export interface ForecastData {
   city: {
     name: string;
     country: string;
+    timezone: number;
   };
 }
 

@@ -45,11 +45,11 @@ const Loader = () => {
 
 const StyledWrapper = styled.div`
   .loader {
-    --background: linear-gradient(135deg, #23C4F8, #275EFE);
-    --shadow: rgba(39, 94, 254, 0.28);
-    --text: #6C7486;
-    --page: rgba(255, 255, 255, 0.36);
-    --page-fold: rgba(255, 255, 255, 0.52);
+    --background: linear-gradient(135deg, #27272a 0%, #09090b 100%);
+    --shadow: rgba(0, 0, 0, 0.4);
+    --text: #71717a;
+    --page: rgba(255, 255, 255, 0.45);
+    --page-fold: rgba(255, 255, 255, 0.75);
     --duration: 3s;
     width: 200px;
     height: 140px;
@@ -63,7 +63,7 @@ const StyledWrapper = styled.div`
     bottom: 8px;
     width: 120px;
     top: 80%;
-    box-shadow: 0 16px 12px var(--shadow);
+    box-shadow: 0 16px 16px var(--shadow);
     transform: rotate(var(--r));
   }
 
@@ -83,8 +83,9 @@ const StyledWrapper = styled.div`
     position: relative;
     z-index: 1;
     perspective: 600px;
-    box-shadow: 0 4px 6px var(--shadow);
+    box-shadow: 0 8px 24px var(--shadow);
     background-image: var(--background);
+    border: 1px solid rgba(255, 255, 255, 0.15);
   }
 
   .loader div ul {
